@@ -61,4 +61,15 @@ body{
 
 }
 
+#nextButton{
+    background-color: rgb(218, 218, 218);
+    color: rgb(92, 92, 92);
+    outline: none;
+    border: none;
+    
+}
+
+#submitAnswerBtn{
+    border-radius: 5px;
+}
 

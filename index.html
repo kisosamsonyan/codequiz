@@ -28,7 +28,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12 text-center mt-2">
-                <div><span id="timeLeftText">Time Left: </span><span id="timer">5:00</span></div>
+                <div><span id="timeLeftText">Time Left: </span><span id="timer">1:15</span></div>
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@
             </div>
             <div id="submitAnswerResult" class="col-12 text-center"></div>
             <div class="col-12 text-center">
-                <button id="nextButton" class="btn btn-primary hide">Next</button>
+                <button id="nextButton" class="btn btn-primary hide">Next Question</button>
             </div>
 
 
@@ -61,19 +61,59 @@
 
 
 
+
+
     <!-- imported questions.js list to use here -->
     <script src="questions.js"></script>
 
     <script>
 
-        
+            function convertSec(s){
+            var min = Math.floor(s/60);
+            var sec = s % 60;
+            var secString = sec.toString();
+           
+            if (secString.length < 2) {
+                secString = "0" + secString;
+            }
+       
+            return min + " : " + secString;
+        }
+       
+
+
+        var timeEl = document.getElementById("timer");
+        var secondsLeft = 75;
+        function setTime(){
+            var timerInterval = setInterval(function(){
+            secondsLeft--;
+            var converted = convertSec(secondsLeft);
+            console.log(secondsLeft);
+            timeEl.textContent = converted;
+
+
+            if(secondsLeft === 0){
+                clearInterval(timerInterval);
+                sendMessage();
+            }
+
+            }, 1000);
+        }
+
+        function timesUp(){
+
+
+        }
+
+
 
         //Start Quiz Button
 
         $("#startQuizBtn").on("click", function(){
+            setTime();
             let questionNum = 0;
             $("#startQuizBtn").addClass("hide");
-            $("#question").html("QUESTION 1 : " + questions[questionNum].title);
+            $("#question").html("QUESTION 1/5 : " + questions[questionNum].title);
             var choicesLength = questions[questionNum].choices.length;
             var choicesContent = '';
             
@@ -88,14 +128,20 @@
 
             // Removing the hide class in the submit button 
             $("#submitAnswerBtn").removeClass("hide");  
-        })
+             })
 
+            var submitNum = 0;
+                function submitIncrementNum(){
+                    submitNum++;
+                    return submitNum;
 
+                }
+            
 
 
             // Submit Answer Button
             $("#submitAnswerBtn").click(function(){
-            let questionNum = 0;
+            let questionNum = submitIncrementNum() - 1;
             var correctLibrary = 0;
             var radios = document.getElementsByName("Question"+questionNum);
            
@@ -104,26 +150,73 @@
                     var usersAnswer = radios[i].value;
                  
                     if(usersAnswer === questions[questionNum].answer){
-                        $("#submitAnswerResult").html("Correct!!").addClass("correctColor");
+                        $("#submitAnswerResult").html("Correct!!").css("color", "green");
                         correctLibrary++;
                         console.log(correctLibrary);
                         $("input[type=radio]").attr('disabled', true);
                         $("#submitAnswerBtn").attr('disabled', true);
-                        $("#nextButton").removeClass("hide");
+                        $("#submitAnswerResult").removeClass("hide")
+
+                        if(questionNum < 4) {
+                            $("#nextButton").removeClass("hide");
+
+                        }
 
                     }
                     else{
-                        $("#submitAnswerResult").html("Incorrect -15 sec").addClass("incorrectColor");
+                        $("#submitAnswerResult").html("Incorrect -15 sec").css("color", "red");
                         $("#submitAnswerBtn").attr('disabled', true);
-                        $("#nextButton").removeClass("hide");
-                        
+                        $("#submitAnswerResult").removeClass("hide")
+
+                        if(questionNum < 4) {
+                            $("#nextButton").removeClass("hide");
+
+                        }
+
+            
                         
                     }
                 }
                 
             }
-           questionNum++;
-        })
+           
+        });
+
+            var num = 0;
+            function incrementNum(){
+                num++;
+                return num;
+
+            }
+
+
+
+            //Next Button 
+            $("#nextButton").click(function(){
+                let questionNum = incrementNum();
+                var whichQuestion = questionNum + 1;
+                $("#question").html("QUESTION " + whichQuestion + "/5 : "  + questions[questionNum].title);
+                var choicesLength = questions[questionNum].choices.length;
+                var choicesContent = '';
+
+                
+                for(var i = 0; i < choicesLength; i++){
+                    $("#choices").html(
+                        choicesContent += 
+                            "<input type=\"radio\" name=\"Question" + questionNum + "\"" 
+                            + " value=\"" + questions[questionNum].choices[i] + "\">" 
+                            + "<li>" + questions[questionNum].choices[i] + "</li> <br>"
+                    )   
+                }  
+                $("#submitAnswerBtn").attr('disabled', false);
+                $("#nextButton").addClass("hide");
+                $("#submitAnswerResult").addClass("hide").css("color", "");
+
+
+
+            });
+
+            
 
         
     </script>

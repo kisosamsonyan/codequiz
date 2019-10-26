@@ -6,7 +6,7 @@ var questions = [
     },
     {
         title: "The condition in an if/else statement is enclosed within ____.",
-        choices: ["quotes", "curly brackets", "parantheses", "square brackets"],
+        choices: ["quotes", "curly brackets", "parentheses", "square brackets"],
         answer: "parentheses"
     },
     {
@@ -21,11 +21,12 @@ var questions = [
     },
 {
         title: "Which built-in method returns the length of the string?",
-        choices: ["lenght()", "size", "index()", "None of the above"],
+        choices: ["length()", "size", "index()", "None of the above"],
         answer: "length()"
 }
 
     
 ]
+
 
 
